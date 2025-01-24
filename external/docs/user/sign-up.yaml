@@ -1,0 +1,38 @@
+/user/sign-up:
+  post:
+    tags:
+      - User
+    summary: Sign up
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [name, email, password]
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+    responses:
+      201:
+        description: User successfully created
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+      400:
+        $ref: "#/definitions/400"
+      422:
+        $ref: "#/definitions/422"

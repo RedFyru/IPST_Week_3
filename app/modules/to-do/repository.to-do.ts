@@ -1,0 +1,59 @@
+import { type Insertable, type Kysely } from "kysely";
+import { DB, Objectives } from "../../common/types/kysely/db.type";
+import { sql } from "kysely"; // Импортируем sql из Kysely
+
+type InsertableObjectiveRowType = Insertable<Objectives>;
+
+export async function insertObjective(con: Kysely<DB>, entity: InsertableObjectiveRowType) {
+    return await con.insertInto("objectives").returningAll().values(entity).executeTakeFirstOrThrow();
+}
+
+export async function updateObjective(con: Kysely<DB>, id: string, updates: Partial<Objectives>) {
+    const result = await con
+        .updateTable("objectives")
+        .set({
+            ...updates,
+            updatedAt: new Date() // Обновление времени изменения задачи
+        })
+        .where("id", "=", id)
+        .returningAll()
+        .executeTakeFirst();
+
+    return result;
+}
+
+interface GetToDosOptions {
+    search?: string;
+    limit: number;
+    offset: number;
+    sortBy: "title" | "createdAt" | "notifyAt";
+    sortOrder: "asc" | "desc";
+    isCompleted?: boolean;
+}
+
+export async function getToDos(con: Kysely<DB>, options: GetToDosOptions) {
+    let query = con.selectFrom("objectives").selectAll();
+
+    if (options.search) {
+        query = query.where("title", "like", `%${options.search}%`);
+    }
+
+    if (options.isCompleted !== undefined) {
+        query = query.where("isCompleted", "=", options.isCompleted);
+    }
+    if (options.sortBy === "title") {
+        // Сортировка по title как по строке
+        query = query.orderBy("title", options.sortOrder);
+    } else if (options.sortBy === "createdAt" || options.sortBy === "notifyAt") {
+        query = query.orderBy(options.sortBy, options.sortOrder);
+    } else {
+        query = query.orderBy("createdAt", options.sortOrder);
+    }
+    query = query.limit(options.limit).offset(options.offset);
+
+    return await query.execute();
+}
+
+export async function getToDoById(con: Kysely<DB>, id: string) {
+    return await con.selectFrom("objectives").selectAll().where("id", "=", id).executeTakeFirst();
+}

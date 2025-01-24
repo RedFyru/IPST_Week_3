@@ -1,0 +1,35 @@
+/to-do/{to-do-id}:
+  get:
+    tags:
+      - To-Do
+    summary: Get details of a specific to-do task
+    parameters:
+      - name: to-do-id
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      200:
+        description: Details of the task
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                is_completed:
+                  type: boolean
+                createdAt:
+                  type: string
+                  format: date-time
+                notifyAt:
+                  type: string
+                  format: date-time
+      404:
+        $ref: "#/definitions/404"

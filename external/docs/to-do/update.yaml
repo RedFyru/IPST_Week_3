@@ -1,0 +1,45 @@
+/to-do/update:
+  patch:
+    tags:
+      - To-Do
+    summary: Edit an existing to-do task
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [id]
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              creatorId:
+                type: string
+              is_completed:
+                type: boolean
+    responses:
+      200:
+        description: Task successfully updated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                is_completed:
+                  type: boolean
+      400:
+        $ref: "#/definitions/400"
+      404:
+        $ref: "#/definitions/404"
+      422:
+        $ref: "#/definitions/422"
