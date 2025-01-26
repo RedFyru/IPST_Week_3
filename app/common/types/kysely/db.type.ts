@@ -21,7 +21,7 @@ export interface Objectives {
   title: string;
   description?: string;
   creatorId: string;
-  notifyAt?: Date;
+  notifyAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
   isCompleted: boolean;

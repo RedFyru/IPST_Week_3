@@ -6,8 +6,8 @@ import { queryToDoSchema } from "./schema/query-to-do.schema";
 import { updateToDoFSchema } from "./schema/update-to-do.schema";
 
 export const todoRouter = async (app: FastifyInstance) => {
-    app.post("/create", { schema: createToDoFSchema }, toDoController.createToDo);
-    app.patch("/update", { schema: updateToDoFSchema }, toDoController.updateToDo);
-    app.get("/", { schema: queryToDoSchema }, toDoController.getToDos);
-    app.get("/:id", {}, getToDoById);
+    app.post("/to-do", { schema: createToDoFSchema }, toDoController.createToDo);
+    app.patch("/to-do/:id", { schema: updateToDoFSchema }, toDoController.updateToDo);
+    app.get("/to-do", { schema: queryToDoSchema }, toDoController.getToDos);
+    app.get("/to-do/:id", {}, getToDoById);
 };

@@ -1,6 +1,5 @@
 import { type Insertable, type Kysely } from "kysely";
 import { DB, Objectives } from "../../common/types/kysely/db.type";
-import { sql } from "kysely"; // Импортируем sql из Kysely
 
 type InsertableObjectiveRowType = Insertable<Objectives>;
 
@@ -28,27 +27,24 @@ interface GetToDosOptions {
     offset: number;
     sortBy: "title" | "createdAt" | "notifyAt";
     sortOrder: "asc" | "desc";
-    isCompleted?: boolean;
+    isCompleted?: boolean | string;
 }
 
 export async function getToDos(con: Kysely<DB>, options: GetToDosOptions) {
     let query = con.selectFrom("objectives").selectAll();
-
+    const validSortFields: Array<"title" | "createdAt" | "notifyAt"> = ["title", "createdAt", "notifyAt"];
     if (options.search) {
-        query = query.where("title", "like", `%${options.search}%`);
+        query = query.where("title", "ilike", `%${options.search}%`);
     }
 
     if (options.isCompleted !== undefined) {
-        query = query.where("isCompleted", "=", options.isCompleted);
+        const isCompleted = options.isCompleted === "true" ? true : options.isCompleted === "false" ? false : undefined;
+        if (isCompleted !== undefined) {
+            query = query.where("isCompleted", "=", isCompleted);
+        }
     }
-    if (options.sortBy === "title") {
-        // Сортировка по title как по строке
-        query = query.orderBy("title", options.sortOrder);
-    } else if (options.sortBy === "createdAt" || options.sortBy === "notifyAt") {
-        query = query.orderBy(options.sortBy, options.sortOrder);
-    } else {
-        query = query.orderBy("createdAt", options.sortOrder);
-    }
+    const sortBy = validSortFields.includes(options.sortBy) ? options.sortBy : "createdAt";
+    query = query.orderBy(sortBy, options.sortOrder);
     query = query.limit(options.limit).offset(options.offset);
 
     return await query.execute();

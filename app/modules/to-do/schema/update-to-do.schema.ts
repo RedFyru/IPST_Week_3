@@ -2,7 +2,6 @@ import type { FastifySchema } from "fastify";
 import { z } from "zod";
 
 const schema = z.object({
-    id: z.string().uuid(),
     title: z.string().min(1).max(255).optional(),
     description: z.string().max(1000).optional(),
     notifyAt: z.string().datetime().optional(),
