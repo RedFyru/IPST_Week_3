@@ -6,7 +6,10 @@ const querySchema = z.object({
     offset: z.coerce.number().min(0).default(0).optional(),
     sortBy: z.enum(["title", "createdAt", "notifyAt"]).default("createdAt").optional(),
     sortOrder: z.enum(["asc", "desc"]).default("asc").optional(),
-    isCompleted: z.union([z.literal("true"), z.literal("false")]).optional()
+    isCompleted: z
+        .enum(["true", "false"])
+        .transform((value) => value === "true")
+        .optional()
 });
 
 export type QueryToDoSchema = z.infer<typeof querySchema>;

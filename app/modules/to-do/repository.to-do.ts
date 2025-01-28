@@ -1,4 +1,4 @@
-import { type Insertable, type Kysely } from "kysely";
+import { type Insertable, type Kysely, Updateable } from "kysely";
 import { DB, Objectives } from "../../common/types/kysely/db.type";
 
 type InsertableObjectiveRowType = Insertable<Objectives>;
@@ -7,12 +7,12 @@ export async function insertObjective(con: Kysely<DB>, entity: InsertableObjecti
     return await con.insertInto("objectives").returningAll().values(entity).executeTakeFirstOrThrow();
 }
 
-export async function updateObjective(con: Kysely<DB>, id: string, updates: Partial<Objectives>) {
+export async function updateObjective(con: Kysely<DB>, id: string, updates: Updateable<Objectives>) {
     const result = await con
         .updateTable("objectives")
         .set({
             ...updates,
-            updatedAt: new Date() // Обновление времени изменения задачи
+            updatedAt: new Date()
         })
         .where("id", "=", id)
         .returningAll()
@@ -27,24 +27,19 @@ interface GetToDosOptions {
     offset: number;
     sortBy: "title" | "createdAt" | "notifyAt";
     sortOrder: "asc" | "desc";
-    isCompleted?: boolean | string;
+    isCompleted?: boolean;
 }
 
 export async function getToDos(con: Kysely<DB>, options: GetToDosOptions) {
     let query = con.selectFrom("objectives").selectAll();
-    const validSortFields: Array<"title" | "createdAt" | "notifyAt"> = ["title", "createdAt", "notifyAt"];
     if (options.search) {
         query = query.where("title", "ilike", `%${options.search}%`);
     }
 
     if (options.isCompleted !== undefined) {
-        const isCompleted = options.isCompleted === "true" ? true : options.isCompleted === "false" ? false : undefined;
-        if (isCompleted !== undefined) {
-            query = query.where("isCompleted", "=", isCompleted);
-        }
+        query = query.where("isCompleted", "=", options.isCompleted);
     }
-    const sortBy = validSortFields.includes(options.sortBy) ? options.sortBy : "createdAt";
-    query = query.orderBy(sortBy, options.sortOrder);
+    query = query.orderBy(options.sortBy, options.sortOrder);
     query = query.limit(options.limit).offset(options.offset);
 
     return await query.execute();

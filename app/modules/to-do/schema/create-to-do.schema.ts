@@ -4,7 +4,11 @@ import { z } from "zod";
 const schema = z.object({
     title: z.string().max(127),
     description: z.string().max(1000).optional(),
-    notifyAt: z.string().datetime().optional(),
+    notifyAt: z
+        .string()
+        .datetime()
+        .optional()
+        .transform((value) => (value ? new Date(value) : undefined)),
     isCompleted: z.boolean().default(false)
 });
 

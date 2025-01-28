@@ -4,6 +4,7 @@ import { HttpStatusCode } from "../../common/enum/http-status-code";
 import * as objectivesRepository from "./repository.to-do";
 import type { CreateToDoSchema } from "./schema/create-to-do.schema";
 import { QueryToDoSchema } from "./schema/query-to-do.schema";
+import type { ReqParamsIdSchema } from "./schema/req-params-id.schema";
 import type { UpdateToDoSchema } from "./schema/update-to-do.schema";
 
 export async function createToDo(req: FastifyRequest<{ Body: CreateToDoSchema }>, rep: FastifyReply) {
@@ -12,19 +13,18 @@ export async function createToDo(req: FastifyRequest<{ Body: CreateToDoSchema }>
         const newTask = {
             title,
             description: description || null,
-            notifyAt: notifyAt ? new Date(notifyAt) : null,
+            notifyAt,
             isCompleted: isCompleted ?? false,
-            creatorId: req.user.id
+            creatorId: req.user.id!
         };
         const insertedTask = await objectivesRepository.insertObjective(sqlCon, newTask);
         return rep.code(HttpStatusCode.CREATED).send(insertedTask);
     } catch (error) {
-        console.error(error);
-        return rep.code(HttpStatusCode.INTERNAL_SERVER_ERROR).send({ error: "Failed to create task" });
+        throw error;
     }
 }
 
-export async function updateToDo(req: FastifyRequest<{ Body: UpdateToDoSchema; Params: { id: string } }>, rep: FastifyReply) {
+export async function updateToDo(req: FastifyRequest<{ Body: UpdateToDoSchema; Params: ReqParamsIdSchema }>, rep: FastifyReply) {
     const { id } = req.params;
     const { title, description, notifyAt, isCompleted } = req.body;
 
@@ -37,7 +37,7 @@ export async function updateToDo(req: FastifyRequest<{ Body: UpdateToDoSchema; P
         const taskToUpdate = await objectivesRepository.updateObjective(sqlCon, id, {
             title,
             description,
-            notifyAt: notifyAt ? new Date(notifyAt) : undefined,
+            notifyAt,
             isCompleted
         });
 
@@ -50,15 +50,16 @@ export async function updateToDo(req: FastifyRequest<{ Body: UpdateToDoSchema; P
 
 export async function getToDos(req: FastifyRequest<{ Querystring: QueryToDoSchema }>, rep: FastifyReply) {
     try {
-        const { search, limit = 10, offset = 0, sortBy = "createdAt", sortOrder = "asc", isCompleted } = req.query;
+        const { search, limit, offset, sortBy = "createdAt", sortOrder = "asc", isCompleted } = req.query;
         const tasks = await objectivesRepository.getToDos(sqlCon, {
             search,
-            limit,
-            offset,
+            limit: Number(limit),
+            offset: Number(offset),
             sortBy,
             sortOrder,
             isCompleted
         });
+
         return rep.code(HttpStatusCode.OK).send(tasks);
     } catch (error) {
         console.error(error);
