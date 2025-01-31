@@ -1,8 +1,8 @@
-/to-do/{id}:
-  patch:
+/to-do/{id}/share:
+  post:
     tags:
       - To-Do
-    summary: Update a to-do task
+    summary: Share a to-do task with another user
     parameters:
       - name: id
         in: path
@@ -15,16 +15,13 @@
         application/json:
           schema:
             type: object
+            required: [userId]
             properties:
-              title:
+              userId:
                 type: string
-              description:
-                type: string
-              isCompleted:
-                type: boolean
     responses:
       200:
-        description: To-do successfully updated
+        description: Access granted to the user
       403:
         description: Access denied
       404:

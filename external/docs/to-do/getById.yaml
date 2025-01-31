@@ -1,17 +1,17 @@
-/to-do/{to-do-id}:
+/to-do/{id}:
   get:
     tags:
       - To-Do
-    summary: Get details of a specific to-do task
+    summary: Get a to-do by ID
     parameters:
-      - name: to-do-id
+      - name: id
         in: path
         required: true
         schema:
           type: string
     responses:
       200:
-        description: Details of the task
+        description: To-do task details
         content:
           application/json:
             schema:
@@ -23,13 +23,12 @@
                   type: string
                 description:
                   type: string
-                is_completed:
-                  type: boolean
                 createdAt:
                   type: string
                   format: date-time
-                notifyAt:
-                  type: string
-                  format: date-time
+                isCompleted:
+                  type: boolean
+      403:
+        description: Access denied
       404:
-        $ref: "#/definitions/404"
+        description: To-do not found
