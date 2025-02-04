@@ -1,23 +1,23 @@
 /to-do/{id}/revoke:
-  delete:
-    tags:
-      - To-Do
-    summary: Revoke access to a to-do task
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: userId
-        in: query
-        required: true
-        schema:
-          type: string
-    responses:
-      200:
-        description: Access revoked successfully
-      403:
-        description: Access denied
-      404:
-        description: To-do or user not found
+    delete:
+        tags:
+            - To-Do
+        summary: Revoke access to a to-do task
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  type: string
+            - name: userId
+              in: query
+              required: true
+              schema:
+                  type: string
+        responses:
+            200:
+                description: Access revoked successfully
+            403:
+                description: Access denied
+            404:
+                description: To-do or user not found

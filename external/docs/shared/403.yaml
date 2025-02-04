@@ -1,5 +1,5 @@
 definitions:
-  403:
-    description: Forbidden
-    content:
-      $ref: "#/definitions/app-error"
+    403:
+        description: Forbidden
+        content:
+            $ref: "#/definitions/app-error"

@@ -1,10 +1,8 @@
 {
-  "singleQuote": false,
-  "trailingComma": "none",
-  "endOfLine": "auto",
-  "printWidth": 180,
-  "tabWidth": 4,
-  "plugins": [
-    "prettier-plugin-organize-imports"
-  ]
+    "singleQuote": false,
+    "trailingComma": "none",
+    "endOfLine": "auto",
+    "printWidth": 180,
+    "tabWidth": 4,
+    "plugins": ["prettier-plugin-organize-imports"]
 }

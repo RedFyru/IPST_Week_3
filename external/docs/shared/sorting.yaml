@@ -1,18 +1,17 @@
 definitions:
-  sort_by:
-    in: query
-    name: sortBy
-    description: sort field parameter
-    required: false
-    schema:
-      type: string
+    sort_by:
+        in: query
+        name: sortBy
+        description: sort field parameter
+        required: false
+        schema:
+            type: string
 
-  order_by:
-    in: query
-    name: orderBy
-    description: order direction
-    required: false
-    schema:
-      type: string
-      enum: ["ASC", "DESC"]
-
+    order_by:
+        in: query
+        name: orderBy
+        description: order direction
+        required: false
+        schema:
+            type: string
+            enum: ["ASC", "DESC"]

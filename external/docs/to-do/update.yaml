@@ -1,31 +1,31 @@
 /to-do/{id}:
-  patch:
-    tags:
-      - To-Do
-    summary: Update a to-do task
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              title:
-                type: string
-              description:
-                type: string
-              isCompleted:
-                type: boolean
-    responses:
-      200:
-        description: To-do successfully updated
-      403:
-        description: Access denied
-      404:
-        description: To-do not found
+    patch:
+        tags:
+            - To-Do
+        summary: Update a to-do task
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  type: string
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            title:
+                                type: string
+                            description:
+                                type: string
+                            isCompleted:
+                                type: boolean
+        responses:
+            200:
+                description: To-do successfully updated
+            403:
+                description: Access denied
+            404:
+                description: To-do not found

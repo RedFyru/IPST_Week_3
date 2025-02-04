@@ -92,3 +92,8 @@ export async function listGrants(con: Kysely<DB>, objectiveId: string) {
         .where("user-objective-shares.objectiveId", "=", objectiveId)
         .execute();
 }
+
+export async function checkUserAccessAndReturn(con: Kysely<DB>, objectiveId: string, userId: string) {
+    const existingAccess = await checkUserAccess(con, objectiveId, userId);
+    return existingAccess ? { id: existingAccess.id.toString(), userId: existingAccess.userId.toString(), objectiveId: existingAccess.objectiveId.toString() } : null;
+}

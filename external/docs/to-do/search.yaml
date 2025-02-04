@@ -1,55 +1,55 @@
 /to-do:
-  get:
-    tags:
-      - To-Do
-    summary: Get list of to-do tasks
-    parameters:
-      - name: search
-        in: query
-        description: Search by title
-        schema:
-          type: string
-      - name: sort
-        in: query
-        description: Sort by fields (title, createdAt, notifyAt)
-        schema:
-          type: string
-          enum: [title, createdAt, notifyAt]
-      - name: limit
-        in: query
-        description: Limit the number of results
-        schema:
-          type: integer
-      - name: offset
-        in: query
-        description: Offset for pagination
-        schema:
-          type: integer
-      - name: is_completed
-        in: query
-        description: Filter by completion status
-        schema:
-          type: boolean
-    responses:
-      200:
-        description: List of tasks
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                  title:
-                    type: string
-                  is_completed:
-                    type: boolean
-                  createdAt:
-                    type: string
-                    format: date-time
-      400:
-        $ref: "#/definitions/400"
-      422:
-        $ref: "#/definitions/422"
+    get:
+        tags:
+            - To-Do
+        summary: Get list of to-do tasks
+        parameters:
+            - name: search
+              in: query
+              description: Search by title
+              schema:
+                  type: string
+            - name: sort
+              in: query
+              description: Sort by fields (title, createdAt, notifyAt)
+              schema:
+                  type: string
+                  enum: [title, createdAt, notifyAt]
+            - name: limit
+              in: query
+              description: Limit the number of results
+              schema:
+                  type: integer
+            - name: offset
+              in: query
+              description: Offset for pagination
+              schema:
+                  type: integer
+            - name: is_completed
+              in: query
+              description: Filter by completion status
+              schema:
+                  type: boolean
+        responses:
+            200:
+                description: List of tasks
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                    id:
+                                        type: string
+                                    title:
+                                        type: string
+                                    is_completed:
+                                        type: boolean
+                                    createdAt:
+                                        type: string
+                                        format: date-time
+            400:
+                $ref: "#/definitions/400"
+            422:
+                $ref: "#/definitions/422"

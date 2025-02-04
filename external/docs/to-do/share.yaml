@@ -1,28 +1,28 @@
 /to-do/{id}/share:
-  post:
-    tags:
-      - To-Do
-    summary: Share a to-do task with another user
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [userId]
-            properties:
-              userId:
-                type: string
-    responses:
-      200:
-        description: Access granted to the user
-      403:
-        description: Access denied
-      404:
-        description: To-do not found
+    post:
+        tags:
+            - To-Do
+        summary: Share a to-do task with another user
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
+                  type: string
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required: [userId]
+                        properties:
+                            userId:
+                                type: string
+        responses:
+            200:
+                description: Access granted to the user
+            403:
+                description: Access denied
+            404:
+                description: To-do not found

@@ -1,43 +1,43 @@
 /to-do/create:
-  post:
-    tags:
-      - To-Do
-    summary: Create a new to-do task
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [title, description]
-            properties:
-              title:
-                type: string
-              description:
-                type: string
-              notifyAt:
-                type: string
-                format: date-time
-              isCompleted:
-                type: boolean
-    responses:
-      201:
-        description: Task successfully created
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                createdAt:
-                  type: string
-                  format: date-time
-      400:
-        $ref: "#/definitions/400"
-      422:
-        $ref: "#/definitions/422"
+    post:
+        tags:
+            - To-Do
+        summary: Create a new to-do task
+        requestBody:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        required: [title, description]
+                        properties:
+                            title:
+                                type: string
+                            description:
+                                type: string
+                            notifyAt:
+                                type: string
+                                format: date-time
+                            isCompleted:
+                                type: boolean
+        responses:
+            201:
+                description: Task successfully created
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                id:
+                                    type: string
+                                title:
+                                    type: string
+                                description:
+                                    type: string
+                                createdAt:
+                                    type: string
+                                    format: date-time
+            400:
+                $ref: "#/definitions/400"
+            422:
+                $ref: "#/definitions/422"

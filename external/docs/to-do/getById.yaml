@@ -1,34 +1,34 @@
 /to-do/{id}:
-  get:
-    tags:
-      - To-Do
-    summary: Get a to-do by ID
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-    responses:
-      200:
-        description: To-do task details
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
+    get:
+        tags:
+            - To-Do
+        summary: Get a to-do by ID
+        parameters:
+            - name: id
+              in: path
+              required: true
+              schema:
                   type: string
-                title:
-                  type: string
-                description:
-                  type: string
-                createdAt:
-                  type: string
-                  format: date-time
-                isCompleted:
-                  type: boolean
-      403:
-        description: Access denied
-      404:
-        description: To-do not found
+        responses:
+            200:
+                description: To-do task details
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                id:
+                                    type: string
+                                title:
+                                    type: string
+                                description:
+                                    type: string
+                                createdAt:
+                                    type: string
+                                    format: date-time
+                                isCompleted:
+                                    type: boolean
+            403:
+                description: Access denied
+            404:
+                description: To-do not found
