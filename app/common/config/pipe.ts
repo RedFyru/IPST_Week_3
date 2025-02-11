@@ -12,6 +12,9 @@ export async function AppErrorPipe(err: any, req: FastifyRequest, reply: Fastify
     }
 
     if (err instanceof CustomException) {
+        if (err.error === "Access to task denied") {
+            return reply.status(err.status).send({ error: err.error, message: err.publicMessage.message });
+        }
         parentLogger.error({ url: req.url, method: req.method }, "Route");
 
         if (req.body) parentLogger.error(req.body, "Body: ");

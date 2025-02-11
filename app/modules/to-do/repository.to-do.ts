@@ -1,5 +1,5 @@
 import { type Insertable, type Kysely, Updateable } from "kysely";
-import { DB, Objectives } from "../../common/types/kysely/db.type";
+import { DB, Objectives, UserObjectiveShares } from "../../common/types/kysely/db.type";
 
 type InsertableObjectiveRowType = Insertable<Objectives>;
 
@@ -8,7 +8,7 @@ export async function insertObjective(con: Kysely<DB>, entity: InsertableObjecti
 }
 
 export async function updateObjective(con: Kysely<DB>, id: string, updates: Updateable<Objectives>) {
-    const result = await con
+    return await con
         .updateTable("objectives")
         .set({
             ...updates,
@@ -17,8 +17,6 @@ export async function updateObjective(con: Kysely<DB>, id: string, updates: Upda
         .where("id", "=", id)
         .returningAll()
         .executeTakeFirst();
-
-    return result;
 }
 
 interface GetToDosOptions {
@@ -53,31 +51,12 @@ export async function deleteObjective(con: Kysely<DB>, id: string) {
     return con.deleteFrom("objectives").where("id", "=", id).execute();
 }
 
-export async function grantAccess(con: Kysely<DB>, objectiveId: string, userId: string) {
-    const existingAccess = await con.selectFrom("user-objective-shares").selectAll().where("objectiveId", "=", objectiveId).where("userId", "=", userId).executeTakeFirst();
-    if (existingAccess) {
-        return {
-            id: existingAccess.id.toString(),
-            userId: existingAccess.userId.toString(),
-            objectiveId: existingAccess.objectiveId.toString()
-        };
-    }
-    const newAccess: Insertable<DB["user-objective-shares"]> = {
-        id: crypto.randomUUID(),
-        objectiveId,
-        userId
-    };
-    await con.insertInto("user-objective-shares").values(newAccess).executeTakeFirstOrThrow();
-    return {
-        id: newAccess.id?.toString() || "",
-        userId: newAccess.userId.toString(),
-        objectiveId: newAccess.objectiveId.toString()
-    };
+export async function grantAccess(con: Kysely<DB>, entity: Insertable<UserObjectiveShares>) {
+    return con.insertInto("user-objective-shares").values(entity).executeTakeFirstOrThrow();
 }
 
 export async function checkUserAccess(con: Kysely<DB>, objectiveId: string, userId: string) {
-    const access = await con.selectFrom("user-objective-shares").selectAll().where("objectiveId", "=", objectiveId).where("userId", "=", userId).executeTakeFirst();
-    return access;
+    return await con.selectFrom("user-objective-shares").selectAll().where("objectiveId", "=", objectiveId).where("userId", "=", userId).executeTakeFirst();
 }
 
 export async function revokeAccess(con: Kysely<DB>, objectiveId: string, userId: string) {
@@ -93,7 +72,10 @@ export async function listGrants(con: Kysely<DB>, objectiveId: string) {
         .execute();
 }
 
-export async function checkUserAccessAndReturn(con: Kysely<DB>, objectiveId: string, userId: string) {
-    const existingAccess = await checkUserAccess(con, objectiveId, userId);
-    return existingAccess ? { id: existingAccess.id.toString(), userId: existingAccess.userId.toString(), objectiveId: existingAccess.objectiveId.toString() } : null;
+export async function getUserById(con: Kysely<DB>, userId: string) {
+    return await con.selectFrom("users").select(["email"]).where("id", "=", userId).executeTakeFirst();
+}
+
+export async function getObjectiveTitleById(con: Kysely<DB>, objectiveId: string) {
+    return await con.selectFrom("objectives").select(["title"]).where("id", "=", objectiveId).executeTakeFirst();
 }

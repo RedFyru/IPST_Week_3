@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { logger } from "./pino-plugin";
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -21,6 +22,6 @@ export async function sendEmailNotification(to: string, subject: string, text: s
     try {
         await transporter.sendMail(mailOptions);
     } catch (error) {
-        console.error("Failed to send email:", error);
+        logger.error("Failed to send email:", error);
     }
 }
