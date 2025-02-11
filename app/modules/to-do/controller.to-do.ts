@@ -40,8 +40,8 @@ export async function getToDoById(req: FastifyRequest<{ Params: GetToDoByIdSchem
 
 export async function deleteToDo(req: FastifyRequest<{ Params: GetToDoByIdSchema }>, rep: FastifyReply) {
     const { id } = req.params;
-    const deleted = await objectivesRepository.deleteObjective(sqlCon, id);
-    return rep.code(HttpStatusCode.NO_CONTENT).send(deleted);
+    await objectivesRepository.deleteObjective(sqlCon, id);
+    return rep.code(HttpStatusCode.NO_CONTENT).send("Task deleted");
 }
 
 export async function shareToDo(req: FastifyRequest<{ Params: GetToDoByIdSchema; Body: ShareToDoSchema }>, rep: FastifyReply) {
@@ -53,7 +53,7 @@ export async function shareToDo(req: FastifyRequest<{ Params: GetToDoByIdSchema;
         return rep.code(HttpStatusCode.OK).send(existingAccess);
     }
 
-    const access = await objectivesRepository.grantAccess(sqlCon, { objectiveId: id, userId: userId });
+    await objectivesRepository.grantAccess(sqlCon, { objectiveId: id, userId: userId });
     const user = await objectivesRepository.getUserById(sqlCon, userId);
     const task = await objectivesRepository.getObjectiveTitleById(sqlCon, id);
 
@@ -63,7 +63,7 @@ export async function shareToDo(req: FastifyRequest<{ Params: GetToDoByIdSchema;
         await sendEmailNotification(user.email, subject, text);
     }
 
-    return rep.code(HttpStatusCode.OK).send(access);
+    return rep.code(HttpStatusCode.OK).send("Access granted");
 }
 
 export async function revokeToDoAccess(req: FastifyRequest<{ Params: GetToDoByIdSchema; Body: RevokeToDoAccessSchema }>, rep: FastifyReply) {
@@ -74,8 +74,8 @@ export async function revokeToDoAccess(req: FastifyRequest<{ Params: GetToDoById
     if (!existingTask) {
         return rep.code(HttpStatusCode.NOT_FOUND).send({ error: "Task not found" });
     }
-    const empty = await objectivesRepository.revokeAccess(sqlCon, id, userId);
-    return rep.code(HttpStatusCode.NO_CONTENT).send(empty);
+    await objectivesRepository.revokeAccess(sqlCon, id, userId);
+    return rep.code(HttpStatusCode.NO_CONTENT).send("Access revoked");
 }
 
 export async function listToDoGrants(req: FastifyRequest<{ Params: ListToDoGrantsSchema }>, rep: FastifyReply) {
